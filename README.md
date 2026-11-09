@@ -1,6 +1,6 @@
 # caddy-demo
 
-[One Coder の構築記事](https://github.com/Roba-6/one-coder-articles/blob/content/19-compose-caddy-static-https/articles/ja/20261109-docker-compose-caddy-static-https.md)で紹介している，**Docker Compose と Caddy で静的 Web サイトを配信するサンプル**です．まず `localhost` で HTTP 接続を確認し，ドメインと DNS を設定したら HTTPS で公開できます．
+[One Coder の構築記事](https://one-coder.com/ja/articles/20261109-docker-compose-caddy-static-https)で紹介している，**Docker Compose と Caddy で静的 Web サイトを配信するサンプル**です．まず `localhost` で HTTP 接続を確認し，ドメインと DNS を設定したら HTTPS で公開できます．
 
 ## ファイル構成
 
