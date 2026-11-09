@@ -1,0 +1,62 @@
+name: Validate Caddy demo
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  http-demo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Validate Docker Compose configuration
+        run: |
+          cp .env.example .env
+          docker compose config -q
+          test "$(docker compose config --environment | grep -c 'SITE_DOMAIN=http://localhost')" -eq 1
+
+      - name: Start Caddy
+        run: docker compose up -d caddy
+
+      - name: Validate Caddy configuration
+        run: |
+          docker compose exec -T caddy caddy validate \
+            --config /etc/caddy/Caddyfile --adapter caddyfile
+
+      - name: Test HTTP page delivery
+        run: |
+          for attempt in $(seq 1 30); do
+            if curl -fsS http://localhost/ | grep -q 'CADDY_DEMO_OK'; then
+              curl -fsSI http://localhost/ | grep -q '200'
+              exit 0
+            fi
+            sleep 1
+          done
+          docker compose logs --tail=100 caddy
+          exit 1
+
+      - name: Test bind-mounted site updates without restart
+        run: |
+          sed -i 's/CADDY_DEMO_OK/CADDY_DEMO_UPDATED/' site/index.html
+          for attempt in $(seq 1 20); do
+            if curl -fsS http://localhost/ | grep -q 'CADDY_DEMO_UPDATED'; then
+              exit 0
+            fi
+            sleep 1
+          done
+          docker compose logs --tail=100 caddy
+          exit 1
+
+      - name: Show status
+        run: docker compose ps
+
+      - name: Stop containers without deleting TLS data
+        if: always()
+        run: |
+          docker compose logs --tail=50 caddy || true
+          docker compose down
