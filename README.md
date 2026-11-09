@@ -118,7 +118,7 @@ openssl s_client -connect example.com:443 -servername example.com \
 
 ## 参考資料
 
-- [One Coder の日本語記事](https://github.com/Roba-6/one-coder-articles/blob/content/19-compose-caddy-static-https/articles/ja/20261109-docker-compose-caddy-static-https.md)
+- [One Coder の日本語記事](https://one-coder.com/ja/articles/20261109-docker-compose-caddy-static-https)
 - [Docker Compose と環境変数](https://docs.docker.com/compose/how-tos/environment-variables/variable-interpolation/)
 - [Docker のバインドマウント](https://docs.docker.com/engine/storage/bind-mounts/)
 - [Caddy の Docker Compose 実行例](https://caddyserver.com/docs/running)
